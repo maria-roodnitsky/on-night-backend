@@ -3,9 +3,14 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import morgan from 'morgan';
+import mongoose from 'mongoose';
+import apiRouter from './router';
 
 // initialize
 const app = express();
+
+// DB Setup
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/onNight';
 
 // enable/disable cross origin resource sharing if necessary
 app.use(cors());
@@ -27,11 +32,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // To parse the incoming requests with JSON payloads
 
 // additional init stuff should go before hitting the routing
+mongoose.connect(mongoURI).then(() => {
+  console.log('connected to database:', mongoURI);
+}).catch((err) => {
+  console.log('error: could not connect to db:', err);
+});
 
 // default index route
 app.get('/', (req, res) => {
-  res.send('hi');
+  res.send('Hello and welcome to our backend server - we will add support for /api, /api/users/ and /api/events shortly');
 });
+
+app.use('/api', apiRouter);
 
 // START THE SERVER
 // =============================================================================
