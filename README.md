@@ -3,23 +3,30 @@
 ![Team Photo](Insert a Team Photo URL here)
 [*how?*](https://help.github.com/articles/about-readmes/#relative-links-and-image-paths-in-readme-files)
 
-TODO: short project description, some sample screenshots or mockups
+On Night is an mobile application intended on helping students connect with Greek life social spaces better, allowing them to be notified about social events without having to rely on word of mouth.
 
 ## Architecture
 
-TODO:  descriptions of code organization and tools and libraries used
+This will be a standard MERN stack. The frontend will be built with React Native for mobile functionality. The backend will include Node, Express, MongoDB, allowing cour client to store and retrieve data as necessary.
 
 ## Setup
 
-TODO: how to get the project dev environment up and running, npm install etc
+Backend: clone the repository, run `npm install` to install the necessary dependencies, then run `npm start`
+
+Frontend: clone the repository, run `npm install` then `expo start`. The app can be viewed via links provided in the terminal or on your phone via the Expo app (QR code scan).
 
 ## Deployment
 
-TODO: how to deploy the project
+The frontend will be deployed via the Expo store.
+The backend will be deployed via Heroku.
 
 ## Authors
 
-TODO: list of authors
+* Ray Huang '21
+* Maria Roodnitsky '22
+* Aarnav Aggarwal '23
+* Rishik Lad '23
+* Will Toth'23 
 
 ## Acknowledgments
 
