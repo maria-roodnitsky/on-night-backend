@@ -1,4 +1,3 @@
-/* eslint linebreak-style: ["error", "windows"] */
 import mongoose, { Schema } from 'mongoose';
 
 const UserSchema = new Schema({
