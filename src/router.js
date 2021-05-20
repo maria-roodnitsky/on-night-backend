@@ -1,4 +1,3 @@
-/* eslint linebreak-style: ["error", "windows"] */
 import { Router } from 'express';
 import * as EventController from './controllers/event_controller';
 import * as UserController from './controllers/user_controller';

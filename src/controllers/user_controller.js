@@ -1,5 +1,4 @@
 /* eslint-disable import/prefer-default-export */
-/* eslint linebreak-style: ["error", "windows"] */
 import User from '../models/user';
 
 export const getUsers = async () => {

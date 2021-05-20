@@ -1,5 +1,4 @@
 /* eslint-disable import/prefer-default-export */
-/* eslint linebreak-style: ["error", "windows"] */
 import Event from '../models/event';
 
 export const getEvents = async () => {
