@@ -8,6 +8,24 @@ router.get('/', (req, res) => {
   res.json({ message: 'Welcome to our API!' });
 });
 
+const getUser = async (req, res) => {
+  try {
+    const user = await UserController.getUser(req.params.id);
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+};
+
+const createUser = async (req, res) => {
+  try {
+    const user = await UserController.createUser(req.body);
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+};
+
 const getUsers = async (req, res) => {
   try {
     const allUsers = await UserController.getUsers();
@@ -26,10 +44,36 @@ const getEvents = async (req, res) => {
   }
 };
 
+const getEvent = async (req, res) => {
+  try {
+    const event = await EventController.getEvent(req.params.id);
+    res.json(event);
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+};
+
+const createEvent = async (req, res) => {
+  try {
+    const event = await EventController.createEvent(req.body);
+    res.json(event);
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+};
+
 router.route('/users')
-  .get(getUsers);
+  .get(getUsers)
+  .post(createUser);
+
+router.route('/users/:id')
+  .get(getUser);
 
 router.route('/events')
-  .get(getEvents);
+  .get(getEvents)
+  .post(createEvent);
+
+router.route('/events/:id')
+  .get(getEvent);
 
 export default router;
