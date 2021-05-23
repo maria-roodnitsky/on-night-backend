@@ -17,8 +17,8 @@ Frontend: clone the repository, run `npm install` then `expo start`. The app can
 
 ## Deployment
 
-The frontend will be deployed via the Expo store.
-The backend will be deployed via Heroku.
+The frontend will be deployed via the Expo store, refer to the frontend repo for more information. 
+The backend has been deployed via Heroku at this [link](https://on-night-api.herokuapp.com/)
 
 ## Authors
 
