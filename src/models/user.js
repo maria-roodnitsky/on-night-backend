@@ -2,14 +2,16 @@ import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 const UserSchema = new Schema({
-  firstName: String,
-  lastName: String,
+  name: String,
   sex: String,
   classYear: Number,
   house: String,
   permission: String,
   email: { type: String, unique: true, lowercase: true },
   password: { type: String },
+  // for account activation, note that 'activationString' is a JWT
+  activated: Boolean,
+  activationString: String,
 }, {
   toObject: { virtuals: true },
   toJSON: { virtuals: true },

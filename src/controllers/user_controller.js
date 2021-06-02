@@ -22,20 +22,31 @@ export const signup = async (postFields) => {
   }
 
   const user = new User();
-  user.firstName = postFields.firstName;
-  user.lastName = postFields.lastName;
+  user.name = postFields.name;
   user.sex = postFields.sex;
   user.classYear = postFields.classYear;
   user.house = postFields.house;
   user.permission = postFields.permission;
   user.email = postFields.email;
   user.password = postFields.password;
+  user.activated = false;
+  user.activationString = '';
 
   try {
     await user.save();
-    return tokenForUser(user);
+    const token = tokenForUser(user);
+    await User.findOneAndUpdate({ email: postFields.email }, { activationString: token });
+    return token;
   } catch (error) {
     throw new Error(`create user error: ${error}`);
+  }
+};
+
+export const activateUser = async (email, token) => {
+  try {
+    await User.findOneAndUpdate({ email, activationString: token }, { activated: true });
+  } catch (error) {
+    throw new Error(`could not activate user: ${error}`);
   }
 };
 
