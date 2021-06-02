@@ -83,10 +83,10 @@ router.post('/signin', requireSignin, async (req, res) => {
   try {
     if (req.user.activated === false) {
       res.status(500).send({ errorMessage: 'Stop right there! Your account hasn\'t been activated yet. Check your inbox for an email from us, and click the link there to activate your account.' });
+    } else {
+      const token = UserController.signin(req.user);
+      res.json({ token, email: req.user.email });
     }
-
-    const token = UserController.signin(req.user);
-    res.json({ token, email: req.user.email });
   } catch (error) {
     res.status(422).send({ error: error.toString() });
   }
