@@ -11,7 +11,7 @@ const router = Router();
 // Configuring Mailgun constants
 const mailgun = require('mailgun-js');
 
-const DOMAIN = 'sandbox2a37ccde144a45d284e634688c5369a0.mailgun.org';
+const DOMAIN = 'onnight.me';
 const mg = mailgun({
   apiKey: process.env.MAILGUN_API_KEY,
   domain: DOMAIN,
@@ -98,13 +98,14 @@ router.post('/signup', async (req, res) => {
     const url = `http://${req.header('Host')}/api/activate?email=${req.body.email}&token=${token}`;
 
     const data = {
-      from: 'OnNight Team <postmaster@sandbox2a37ccde144a45d284e634688c5369a0.mailgun.org>',
+      from: 'OnNight Team <noreply@onnight.me>',
       to: `${req.body.email}`,
       subject: 'Please activate your OnNight Account',
       text: `Hey there, and welcome to OnNight!\n\nTo activate your account and see what is happening around Dartmouth, click the following URL:\n\n${url}\n\n Thanks!\n-The OnNight Team`,
     };
 
     mg.messages().send(data);
+
     res.json({ message: 'Sent activation email!', token, email: req.body.email });
   } catch (error) {
     res.status(422).send({ error: error.toString() });
