@@ -9,6 +9,8 @@ const UserSchema = new Schema({
   permission: String,
   email: { type: String, unique: true, lowercase: true },
   password: { type: String },
+  resettingPassword: Boolean,
+  resettingPasswordCode: String,
   // for account activation, note that 'activationString' is a JWT
   activated: Boolean,
   activationString: String,
