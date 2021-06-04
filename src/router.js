@@ -24,20 +24,20 @@ router.get('/', (req, res) => {
   res.json({ message: 'Welcome to our API!' });
 });
 
-router.get('/activate', async (req, res) => {
-  const { email, token } = req.query;
-  try {
-    await UserController.activateUser(email, token);
-    res.json({ email, token, message: 'Successfully activated account!' });
-  } catch (err) {
-    res.status(500).json({ err, message: 'Unable to activate account!' });
-  }
-});
-
 const getUser = async (req, res) => {
   try {
     const user = await UserController.getUser(req.params.id);
     res.json(user);
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+};
+
+const updateUser = async (req, res) => {
+  try {
+    const userid = req.params.id;
+    await UserController.updateUser(userid, req.body);
+    res.json({ message: 'User has been updated!' });
   } catch (err) {
     res.status(500).json({ err });
   }
@@ -112,11 +112,62 @@ router.post('/signup', async (req, res) => {
   }
 });
 
+router.get('/activate', async (req, res) => {
+  const { email, token } = req.query;
+  try {
+    await UserController.activateUser(email, token);
+    res.json({ email, token, message: 'Successfully activated account!' });
+  } catch (err) {
+    res.status(500).json({ err, message: 'Unable to activate account!' });
+  }
+});
+
+router.get('/reset', async (req, res) => {
+  const { email, resetCode } = req.query;
+  try {
+    const { resettingPassword, userid } = await UserController.checkPasswordResetCode(email, resetCode);
+    if (resettingPassword === true) {
+      res.json({
+        message: 'Success! Visit the app, where you should be prompted to enter in your new password.', email, userid, resettingPassword,
+      });
+    } else {
+      res.json({ message: 'Failed! Start password reset process from beginning.' });
+    }
+  } catch (err) {
+    res.status(500).json({ err, message: 'Unable to set resettingPassword to true! Try again.' });
+  }
+});
+
+router.post('/reset/sendemail', async (req, res) => {
+  try {
+    const userEmail = req.body.email;
+    const { resetCode, userid } = await UserController.userIsResettingPassword(userEmail);
+
+    const url = `http://${req.header('Host')}/api/reset?email=${req.body.email}&resetCode=${resetCode}`;
+
+    const data = {
+      from: 'OnNight Team <noreply@onnight.me>',
+      to: `${userEmail}`,
+      subject: 'Resetting your OnNight Password',
+      text: `Hey there!\n\nTo reset your password, click the following link and go back to the app. From there, you'll be prompted to enter your new password:\n\n${url}\n\n Thanks!\n-The OnNight Team`,
+    };
+
+    mg.messages().send(data);
+
+    res.json({
+      message: 'Sent password reset email!', resetCode, email: userEmail, userid,
+    });
+  } catch (error) {
+    res.status(422).send({ error: error.toString() });
+  }
+});
+
 router.route('/users')
   .get(requireAuth, getUsers);
 
 router.route('/users/:id')
-  .get(requireAuth, getUser);
+  .get(requireAuth, getUser)
+  .put(updateUser);
 
 router.route('/events')
   .get(requireAuth, getEvents)

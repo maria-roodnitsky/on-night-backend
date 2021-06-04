@@ -1,6 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 import jwt from 'jwt-simple';
 import dotenv from 'dotenv';
+import { customAlphabet } from 'nanoid';
+import bcrypt from 'bcryptjs';
 import User from '../models/user';
 
 dotenv.config({ silent: true });
@@ -29,6 +31,8 @@ export const signup = async (postFields) => {
   user.permission = postFields.permission;
   user.email = postFields.email;
   user.password = postFields.password;
+  user.resettingPassword = false;
+  user.resettingPasswordCode = '';
   user.activated = false;
   user.activationString = '';
 
@@ -50,6 +54,32 @@ export const activateUser = async (email, token) => {
   }
 };
 
+export const userIsResettingPassword = async (email) => {
+  try {
+    const nanoid = customAlphabet('1234567890', 10);
+    const resetCode = nanoid();
+    const user = await User.findOne({ email });
+    await User.findOneAndUpdate({ email }, { resettingPasswordCode: resetCode });
+    return { resetCode, userid: user._id };
+  } catch (error) {
+    throw new Error(`could not set resettingPasswordCode to a short code: ${error}`);
+  }
+};
+
+export const checkPasswordResetCode = async (email, parsedCode) => {
+  try {
+    const user = await User.findOne({ email });
+    if (user.resettingPasswordCode === parsedCode) {
+      await User.findOneAndUpdate({ email }, { resettingPassword: true });
+      return { resettingPassword: true, userid: user._id };
+    } else {
+      return { resettingPassword: false, userid: user._id };
+    }
+  } catch (error) {
+    throw new Error('could not check if password-reset codes were the same on backend and from parsed URL');
+  }
+};
+
 export const getUser = async (id) => {
   const user = await User.findById(id);
 
@@ -58,6 +88,16 @@ export const getUser = async (id) => {
   } catch (error) {
     throw new Error(`could not get user error: ${error}`);
   }
+};
+
+export const updateUser = async (id, putFields) => {
+  if (putFields.password) {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(putFields.password, salt);
+    putFields.password = hash;
+  }
+  await User.findByIdAndUpdate(id, { resettingPassword: false, resettingPasswordCode: '' });
+  await User.findByIdAndUpdate(id, putFields);
 };
 
 export const getUsers = async () => {
