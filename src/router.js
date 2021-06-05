@@ -122,6 +122,17 @@ router.get('/activate', async (req, res) => {
   }
 });
 
+router.post('/activate', async (req, res) => {
+  const userEmail = req.body.email;
+  try {
+    const user = await UserController.getUserByEmail(userEmail);
+    const { activated } = user;
+    res.json({ activated });
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+});
+
 router.get('/reset', async (req, res) => {
   const { email, resetCode } = req.query;
   try {
