@@ -90,6 +90,16 @@ export const getUser = async (id) => {
   }
 };
 
+export const getUserByEmail = async (email) => {
+  const user = await User.findOne({ email });
+
+  try {
+    return user;
+  } catch (error) {
+    throw new Error(`could not get user by email: ${error}`);
+  }
+};
+
 export const updateUser = async (id, putFields) => {
   if (putFields.password) {
     const salt = await bcrypt.genSalt(10);
