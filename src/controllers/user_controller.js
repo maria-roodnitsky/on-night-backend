@@ -90,6 +90,14 @@ export const getUser = async (id) => {
   }
 };
 
+export const deleteUser = async (id) => {
+  try {
+    await User.findByIdAndDelete(id);
+  } catch (error) {
+    throw new Error(`could not delete user: ${error}`);
+  }
+};
+
 export const getUserByEmail = async (email) => {
   const user = await User.findOne({ email });
 

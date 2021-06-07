@@ -43,6 +43,16 @@ const updateUser = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    const userid = req.params.id;
+    await UserController.deleteUser(userid);
+    res.json({ message: 'User has been deleted!' });
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+};
+
 const getUsers = async (req, res) => {
   try {
     const allUsers = await UserController.getUsers();
@@ -74,6 +84,16 @@ const createEvent = async (req, res) => {
   try {
     const event = await EventController.createEvent(req.body);
     res.json(event);
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+};
+
+const deleteEvent = async (req, res) => {
+  try {
+    const eventid = req.params.id;
+    await EventController.deleteEvent(eventid);
+    res.json({ message: 'Event has been deleted!' });
   } catch (err) {
     res.status(500).json({ err });
   }
@@ -188,13 +208,15 @@ router.route('/users')
 
 router.route('/users/:id')
   .get(requireAuth, getUser)
-  .put(updateUser);
+  .put(updateUser)
+  .delete(deleteUser);
 
 router.route('/events')
   .get(requireAuth, getEvents)
   .post(requireAuth, createEvent);
 
 router.route('/events/:id')
-  .get(requireAuth, getEvent);
+  .get(requireAuth, getEvent)
+  .delete(deleteEvent);
 
 export default router;
