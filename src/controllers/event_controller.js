@@ -30,6 +30,14 @@ export const getEvent = async (id) => {
   }
 };
 
+export const deleteEvent = async (id) => {
+  try {
+    await Event.findByIdAndDelete(id);
+  } catch (error) {
+    throw new Error(`could not delete event: ${error}`);
+  }
+};
+
 export const getEvents = async () => {
   const events = await Event.find();
 
