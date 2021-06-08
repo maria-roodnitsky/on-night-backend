@@ -38,6 +38,10 @@ export const deleteEvent = async (id) => {
   }
 };
 
+export const updateEvent = async (id, putFields) => {
+  await Event.findByIdAndUpdate(id, putFields);
+};
+
 export const getEvents = async () => {
   const events = await Event.find();
 
