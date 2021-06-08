@@ -99,6 +99,16 @@ const deleteEvent = async (req, res) => {
   }
 };
 
+const updateEvent = async (req, res) => {
+  try {
+    const eventid = req.params.id;
+    await EventController.updateEvent(eventid, req.body);
+    res.json({ message: 'Event has been updated!' });
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+};
+
 router.post('/signin', requireSignin, async (req, res) => {
   try {
     if (req.user.activated === false) {
@@ -217,6 +227,7 @@ router.route('/events')
 
 router.route('/events/:id')
   .get(requireAuth, getEvent)
+  .put(updateEvent)
   .delete(deleteEvent);
 
 export default router;
