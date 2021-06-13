@@ -179,6 +179,16 @@ router.post('/activate', async (req, res) => {
 });
 
 // Verify user identity before being allowed to enter new password
+router.post('/users/info', async (req, res) => {
+  const userEmail = req.body.email;
+  try {
+    const user = await UserController.getUserByEmail(userEmail); 
+    res.json({ user });
+  } catch (err) {
+    res.status(500).json({ err }); 
+  }
+}); 
+
 router.get('/reset', async (req, res) => {
   const { email, resetCode } = req.query;
   try {

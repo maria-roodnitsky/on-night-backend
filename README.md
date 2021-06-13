@@ -2,6 +2,10 @@
 
 On Night is an mobile application intended on helping students connect with Greek life social spaces better, allowing them to be notified about social events without having to rely on word of mouth.
 
+## Dev site update
+
+Most of the documentation for the dev site update can be found on the front end repo at https://github.com/dartmouth-cs52-21S/project-on-night. Although the backend has come very far. It now supports all of the necessary API endpoints/routes for both users and events. The users are simply displayed as it is now, although they will eventually have different permissions through authentication, and the events are also all displayed, although in the future, this will be in more of a calendar format. The back end has almost all of it's essential functionality, with the exception of authentication. Thanks!!
+
 ## Architecture
 
 We followed a standard MERN stack. The frontend has been built with React Native for mobile functionality. The backend was built with Node, Express, and MongoDB, which allows our app to store and retrieve data as necessary. Other relevant tools/platforms include: Mailgun and Heroku. 
@@ -15,7 +19,8 @@ Frontend (deployed): refer to frontend repository instructions for further detai
 
 ## Deployment
 
-The backend server has been deployed here: https://on-night-api.herokuapp.com/
+The frontend will be deployed via the Expo store, refer to the frontend repo for more information. 
+The backend has been deployed via Heroku at this [link](https://on-night-api.herokuapp.com/)
 
 ## Authors
 
