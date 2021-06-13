@@ -1,6 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import Event from '../models/event';
 
+// Create a new event with postFields
 export const createEvent = async (postFields) => {
   const event = new Event();
   event.title = postFields.title;
@@ -13,6 +14,7 @@ export const createEvent = async (postFields) => {
   event.public = postFields.public;
 
   try {
+    // Save event
     const savedEvent = await event.save();
     return savedEvent;
   } catch (error) {
@@ -20,6 +22,7 @@ export const createEvent = async (postFields) => {
   }
 };
 
+// Get event by ID
 export const getEvent = async (id) => {
   const event = await Event.findById(id);
 
@@ -30,6 +33,7 @@ export const getEvent = async (id) => {
   }
 };
 
+// Delete event by ID
 export const deleteEvent = async (id) => {
   try {
     await Event.findByIdAndDelete(id);
@@ -38,10 +42,12 @@ export const deleteEvent = async (id) => {
   }
 };
 
+// Update event by ID and putFields
 export const updateEvent = async (id, putFields) => {
   await Event.findByIdAndUpdate(id, putFields);
 };
 
+// Get all events
 export const getEvents = async () => {
   const events = await Event.find();
 

@@ -22,7 +22,6 @@ const jwtOptions = {
 };
 // NOTE: we are not calling this a bearer token (although it technically is), if you see people use Bearer in front of token on the internet you could either ignore it, use it but then you have to parse it out here as well as prepend it on the frontend.
 
-// 🚀🚀🚀🚀🚀🚀🚀
 // username/email + password authentication strategy
 const localLogin = new LocalStrategy(localOptions, async (email, password, done) => {
   let user;
@@ -63,7 +62,6 @@ const jwtLogin = new JwtStrategy(jwtOptions, async (payload, done) => {
     done(null, false);
   }
 });
-// 🚀🚀🚀🚀🚀🚀🚀
 
 // Tell passport to use this strategy
 passport.use(jwtLogin); // for 'jwt'

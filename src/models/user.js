@@ -9,6 +9,7 @@ const UserSchema = new Schema({
   permission: String,
   email: { type: String, unique: true, lowercase: true },
   password: { type: String },
+  // for resetting passwords, note that resettingPasswordCode is a randomly generated numerical code
   resettingPassword: Boolean,
   resettingPasswordCode: String,
   // for account activation, note that 'activationString' is a JWT
@@ -20,6 +21,7 @@ const UserSchema = new Schema({
   timestamps: true,
 });
 
+// middleware that salts + hashes passwords before saving them to the database
 UserSchema.pre('save', async function beforeUserSave(next) {
   // get access to the user model
   const user = this;
@@ -37,7 +39,6 @@ UserSchema.pre('save', async function beforeUserSave(next) {
   }
 });
 
-// note use of named function rather than arrow notation
 UserSchema.methods.comparePassword = async function comparePassword(candidatePassword) {
   const comparison = await bcrypt.compare(candidatePassword, this.password);
   return comparison;

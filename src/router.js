@@ -17,13 +17,12 @@ const mg = mailgun({
   domain: DOMAIN,
 });
 
-// You can send up to 300 emails/day from this sandbox server.
-// Next, you should add your own domain so you can send 10000 emails/month for free.
-
+// Home route
 router.get('/', (req, res) => {
   res.json({ message: 'Welcome to our API!' });
 });
 
+// Get user by ID
 const getUser = async (req, res) => {
   try {
     const user = await UserController.getUser(req.params.id);
@@ -33,6 +32,7 @@ const getUser = async (req, res) => {
   }
 };
 
+// Update user by ID and new fields
 const updateUser = async (req, res) => {
   try {
     const userid = req.params.id;
@@ -43,6 +43,7 @@ const updateUser = async (req, res) => {
   }
 };
 
+// Delete user by ID
 const deleteUser = async (req, res) => {
   try {
     const userid = req.params.id;
@@ -53,6 +54,7 @@ const deleteUser = async (req, res) => {
   }
 };
 
+// Get all users
 const getUsers = async (req, res) => {
   try {
     const allUsers = await UserController.getUsers();
@@ -62,6 +64,7 @@ const getUsers = async (req, res) => {
   }
 };
 
+// Get all events
 const getEvents = async (req, res) => {
   try {
     const allEvents = await EventController.getEvents();
@@ -71,6 +74,7 @@ const getEvents = async (req, res) => {
   }
 };
 
+// Get event by ID
 const getEvent = async (req, res) => {
   try {
     const event = await EventController.getEvent(req.params.id);
@@ -80,6 +84,7 @@ const getEvent = async (req, res) => {
   }
 };
 
+// Create new event with postFields
 const createEvent = async (req, res) => {
   try {
     const event = await EventController.createEvent(req.body);
@@ -89,6 +94,7 @@ const createEvent = async (req, res) => {
   }
 };
 
+// Delete event by ID
 const deleteEvent = async (req, res) => {
   try {
     const eventid = req.params.id;
@@ -99,6 +105,7 @@ const deleteEvent = async (req, res) => {
   }
 };
 
+// Update event with ID and putFields
 const updateEvent = async (req, res) => {
   try {
     const eventid = req.params.id;
@@ -109,11 +116,14 @@ const updateEvent = async (req, res) => {
   }
 };
 
+// Route to sign in a user
 router.post('/signin', requireSignin, async (req, res) => {
   try {
+    // Raise error if user's account hasn't been activated yet
     if (req.user.activated === false) {
       res.status(500).send({ errorMessage: 'Stop right there! Your account hasn\'t been activated yet. Check your inbox for an email from us, and click the link there to activate your account.' });
     } else {
+      // Otherwise, return a JWT
       const token = UserController.signin(req.user);
       res.json({ token, email: req.user.email });
     }
@@ -122,9 +132,12 @@ router.post('/signin', requireSignin, async (req, res) => {
   }
 });
 
+// Route to create a new user
 router.post('/signup', async (req, res) => {
   try {
     const token = await UserController.signup(req.body);
+
+    // Send an activation email with Mailgun
     const url = `http://${req.header('Host')}/api/activate?email=${req.body.email}&token=${token}`;
 
     const data = {
@@ -142,6 +155,7 @@ router.post('/signup', async (req, res) => {
   }
 });
 
+// Activate an account with given email/token query values
 router.get('/activate', async (req, res) => {
   const { email, token } = req.query;
   try {
@@ -152,6 +166,7 @@ router.get('/activate', async (req, res) => {
   }
 });
 
+// Check if a user's account is activated with user's email
 router.post('/activate', async (req, res) => {
   const userEmail = req.body.email;
   try {
@@ -163,6 +178,7 @@ router.post('/activate', async (req, res) => {
   }
 });
 
+// Verify user identity before being allowed to enter new password
 router.post('/users/info', async (req, res) => {
   const userEmail = req.body.email;
   try {
@@ -189,11 +205,13 @@ router.get('/reset', async (req, res) => {
   }
 });
 
+// Send a password-reset user verification email to the user's inbox
 router.post('/reset/sendemail', async (req, res) => {
   try {
     const userEmail = req.body.email;
     const { resetCode, userid } = await UserController.userIsResettingPassword(userEmail);
 
+    // Send email using Mailgun
     const url = `http://${req.header('Host')}/api/reset?email=${req.body.email}&resetCode=${resetCode}`;
 
     const data = {
@@ -213,6 +231,7 @@ router.post('/reset/sendemail', async (req, res) => {
   }
 });
 
+// Router configurations
 router.route('/users')
   .get(requireAuth, getUsers);
 
